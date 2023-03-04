@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Compressor;
@@ -13,8 +14,8 @@ public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   //VictorSPX armMotor = new VictorSPX(Constants.MOTOR_ARM);
   public boolean up,down,aM;
-  private int i = 1000;
   private CANSparkMax sp = new CANSparkMax(10,MotorType.kBrushless);
+  private RelativeEncoder spEncoder = sp.getEncoder();
 
 
 
@@ -33,7 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     armNeutral();
-    SmartDashboard.putNumber("Arm Control", i);
+    SmartDashboard.putNumber("Encoder Output",spEncoder.getPosition());
   }
  
   @Override
@@ -41,26 +42,14 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public void armUp(double power){
-    if(i < Constants.kMaxExtension){
-      SmartDashboard.putString("Arm Direction", "Up");
-      pneuUP();
-      i++;
-    } else {
-      SmartDashboard.putString("Arm Direction", "Up Locked");
-      pneuNeutral();
-    }
+  public void armUp(){
+    SmartDashboard.putString("Arm Direction", "Up");
+    pneuUP();
   }
 
-  public void armDown(double power){
-    if(i > 0){
-      SmartDashboard.putString("Arm Direction", "Down");
-      i--;
-      pneuDown();
-    } else {
-      SmartDashboard.putString("Arm Direction", "Down Locked");
-      pneuNeutral();
-    }
+  public void armDown(){
+    SmartDashboard.putString("Arm Direction", "Down");
+    pneuDown();
   }
 
   private void armNeutral(){
@@ -85,17 +74,10 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putString("Pneumatics", "DOWN");
   }
   private void pneuNeutral(){
-    if(aM){
       inP.set(false);
       outP.set(false);
       inP2.set(false);
       outP2.set(false);
-    }else{
-      inP.set(false);
-      outP.set(false);
-      inP2.set(false);
-      outP2.set(false);
-    }
     SmartDashboard.putString("Pneumatics", "NEUTRAL");
   }
 

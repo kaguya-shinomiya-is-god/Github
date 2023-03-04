@@ -79,16 +79,25 @@ public class RobotContainer {
 
     new JoystickButton(systemsController, Constants.RB)
       .whileTrue(Commands.run(() ->{
-        arm.armUp(spd); 
+        arm.armUp(); 
         arm.up = true;
+        SmartDashboard.putString("Elevacao Pneumatico", "Sim");
       }))
-      .onFalse(Commands.run(() -> arm.up = false));
+      .onFalse(Commands.run(() -> {
+        arm.up = false;
+        SmartDashboard.putString("Elevacao Pneumatico", "Nao");
+      }));
     new JoystickButton(systemsController, Constants.LB)
       .whileTrue(Commands.run(() -> {
-        arm.armDown(spd);
+        arm.armDown();
         arm.down = false;
-      }))
-      .onFalse(Commands.run(() -> arm.down = false));
+        SmartDashboard.putString("Descida Pneumatico", "Sim");
+        }
+      ))
+      .onFalse(Commands.run(() -> {
+        arm.down = false;
+        SmartDashboard.putString("Descida Pneumatico", "Nao");
+      }));
 
     new JoystickButton(systemsController, Constants.BUTTON_X)
       .onTrue(Commands.runOnce(() -> arm.motorOn(spd)))
