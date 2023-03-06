@@ -16,6 +16,7 @@ public class ArmSubsystem extends SubsystemBase {
   public boolean up,down,aM;
   private CANSparkMax sp = new CANSparkMax(10,MotorType.kBrushless);
   private RelativeEncoder spEncoder = sp.getEncoder();
+  private double spEnconderRaw = 0;
 
 
 
@@ -35,6 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     armNeutral();
     SmartDashboard.putNumber("Encoder Output",spEncoder.getPosition());
+    spEnconderRaw = spEncoder.getPosition();
   }
  
   @Override
@@ -45,11 +47,13 @@ public class ArmSubsystem extends SubsystemBase {
   public void armUp(){
     SmartDashboard.putString("Arm Direction", "Up");
     pneuUP();
+    motorOn(Constants.kNormalSpd);
   }
 
   public void armDown(){
     SmartDashboard.putString("Arm Direction", "Down");
     pneuDown();
+    motorOff();
   }
 
   private void armNeutral(){

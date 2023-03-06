@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.RailSubsystem;
@@ -33,13 +34,14 @@ public class RobotContainer {
   private static ClawSubsystem claw = new ClawSubsystem();
   private static RailSubsystem rail = new RailSubsystem();
   private static ArmSubsystem arm = new ArmSubsystem();
+  private static CameraSubsystem cam = new CameraSubsystem();
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   JoystickButton lb = new JoystickButton(driverController, 5);
   double spd = 0.75;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the button bindings
+    // Configure                                                                                                                                                                                                                                                                                                                                                               the button bindings
     configureButtonBindings();
     lb.whileTrue(new RunCommand(() -> robotDrive.setPower(Driver.povCalc(driverController.getPOV()))));
     robotDrive.setDefaultCommand(new DefaultDrive(robotDrive, driverController));
@@ -60,24 +62,30 @@ public class RobotContainer {
     //     robotDrive.setPower(powers);
     //   }, robotDrive), false);
 
-    new JoystickButton(systemsController, Constants.BUTTON_Y)
-      .onTrue(Commands.runOnce(() -> claw.clawActivate()))
-      .onFalse(Commands.runOnce(() -> claw.clawDesactivate()));
+    new JoystickButton(systemsController, 1)
+      .toggleOnTrue(Commands.run(() -> {
+        SmartDashboard.putBoolean("Claw Activated", true);
+        claw.clawActivate();
+      }))
+      .toggleOnFalse(Commands.run(() -> {
+        SmartDashboard.putBoolean("Claw Activated", false);
+        claw.clawDesactivate();
+      }));
     
-    new JoystickButton(systemsController, Constants.BUTTON_B)
+    new JoystickButton(systemsController, Constants.SYSTEM_CONTROLLER_SIDE_BUTTON)
       .toggleOnTrue(Commands.run(() -> 
         rail.manageRailL(systemsController.getRawAxis(Constants.LT))))
       .toggleOnFalse(Commands.run(() ->
         rail.morreEssaDisgrama()));
       
 
-    new JoystickButton(systemsController, 1)
+    new JoystickButton(systemsController, 2)
       .toggleOnTrue(Commands.run(() -> 
-        rail.manageRailR(systemsController.getRawAxis(Constants.RT))))
+        rail.manageRailR(systemsController.getY())))
       .toggleOnFalse(Commands.run(() ->
         rail.morreEssaDisgrama()));
 
-    new JoystickButton(systemsController, Constants.RB)
+    new JoystickButton(systemsController, 3)
       .whileTrue(Commands.run(() ->{
         arm.armUp(); 
         arm.up = true;
@@ -87,7 +95,7 @@ public class RobotContainer {
         arm.up = false;
         SmartDashboard.putString("Elevacao Pneumatico", "Nao");
       }));
-    new JoystickButton(systemsController, Constants.LB)
+    new JoystickButton(systemsController, 4)
       .whileTrue(Commands.run(() -> {
         arm.armDown();
         arm.down = false;
@@ -99,7 +107,7 @@ public class RobotContainer {
         SmartDashboard.putString("Descida Pneumatico", "Nao");
       }));
 
-    new JoystickButton(systemsController, Constants.BUTTON_X)
+    new JoystickButton(systemsController, 11)
       .onTrue(Commands.runOnce(() -> arm.motorOn(spd)))
       .onFalse(Commands.runOnce(() -> arm.motorOff()));
 

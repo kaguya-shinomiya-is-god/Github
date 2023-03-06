@@ -38,6 +38,10 @@ public final class Constants {
     public static final int AXIS_LT = 2;
     public static final int AXIS_RT = 3;
 
+    public static final int SYSTEM_CONTROLLER_TRIGGER_BUTTON = 1;
+    public static final int SYSTEM_CONTROLLER_SIDE_BUTTON = 2;
+    public static final int SYSTEM_CONTROLLER_Y_AXIS = 0;
+
     public static final int PISTON1_OUT = 0;
     public static final int PISTON1_IN = 4;
     public static final int PISTON2_OUT = 12;
@@ -47,6 +51,7 @@ public final class Constants {
     public static final double kFastSpd = 1;
     public static final double kNormalSpd = 0.5;
     public static final double kSlowSpd = 0.25;
+    public static final double kPistonLowPosition = 2.4;
 }
 
 

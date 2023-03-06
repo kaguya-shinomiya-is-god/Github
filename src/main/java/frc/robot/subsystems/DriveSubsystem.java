@@ -70,11 +70,14 @@ public class DriveSubsystem extends SubsystemBase {
     this.motor_right2.follow(motor_right);
     this.motor_left2.follow(motor_left);
     this.motor_left.setInverted(true);
+    this.motor_left2.setInverted(true);
     this.motor_right.setInverted(true);
-    this.motor_right2.setInverted(true);
+    this.motor_right2.setInverted(false);
     this.motor_right.configNeutralDeadband(0.04);
     this.motor_left.configNeutralDeadband(0.04);
     this.motor_left.setNeutralMode(NeutralMode.Brake);
     this.motor_right.setNeutralMode(NeutralMode.Brake);
+    this.motor_left2.setNeutralMode(NeutralMode.Brake);
+    this.motor_right2.setNeutralMode(NeutralMode.Brake);
   }
 }

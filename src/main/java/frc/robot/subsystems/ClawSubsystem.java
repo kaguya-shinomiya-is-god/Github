@@ -1,15 +1,13 @@
 package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
 public class ClawSubsystem extends SubsystemBase {
-    VictorSPX claw;
+    CANSparkMax claw;
     Timer time = new Timer();
     boolean clawIsOpen = false;
   public ClawSubsystem() {
@@ -29,25 +27,28 @@ public class ClawSubsystem extends SubsystemBase {
   }
 
   private void initMotor(){
-    claw = new VictorSPX(Constants.MOTOR_CLAW);
+    claw = new CANSparkMax(11, MotorType.kBrushless);
+    claw.setInverted(true);
   }
 
   private void periodicClaw(){
     
       if(time.get() == 0)  time.start();
-      claw.set(ControlMode.PercentOutput, 0.5);
+      claw.set(0.25);
       SmartDashboard.putNumber("Timer",time.get());
       SmartDashboard.putBoolean("Garra", true);
       if(time.get() > 2){
         SmartDashboard.putNumber("Timer",time.get());
-        time.reset();
-        time.stop();
-        claw.set(ControlMode.PercentOutput, 0);
+        claw.set(0);
         SmartDashboard.putBoolean("Garra", false);
         clawIsOpen = false;
-        time.start();
       }
   
+  }
+
+  public void timeRestart(){
+    time.stop();
+    time.reset();
   }
 
   public void clawActivate(){
@@ -57,8 +58,8 @@ public class ClawSubsystem extends SubsystemBase {
 
   public void clawDesactivate(){
     clawIsOpen = false;
-    time.stop();
-    time.reset();
+    claw.set(0);
+    timeRestart();
   }
 
 

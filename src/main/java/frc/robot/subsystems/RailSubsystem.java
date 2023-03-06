@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.utils.Driver;
 
 public class RailSubsystem extends SubsystemBase {
     VictorSPX rail;
@@ -27,8 +28,8 @@ public class RailSubsystem extends SubsystemBase {
   }
 
     public void manageRailR(double tR){
-        if(tR != 0){ 
-            rail.set(ControlMode.PercentOutput, tR);
+        if(Driver.minMethod(tR) != 0){ 
+            rail.set(ControlMode.PercentOutput, -tR);
             SmartDashboard.putBoolean("Trilho", true);
         }
         else{
@@ -39,7 +40,7 @@ public class RailSubsystem extends SubsystemBase {
 
     public void manageRailL(double tL){
         if(tL != 0){
-          rail.set(ControlMode.PercentOutput, -tL);
+          rail.set(ControlMode.PercentOutput, -tL * Constants.kSlowSpd);
             SmartDashboard.putBoolean("Trilho", true);
         }
         else{

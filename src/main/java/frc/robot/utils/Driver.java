@@ -193,8 +193,8 @@ public class Driver {
     }
   }
   
-  public double minMethod(double a) {
-    if(Math.abs(a) < 0.04){
+  public static double minMethod(double a) {
+    if(Math.abs(a) < 0.1){
       return 0;
     }  
     return a;
