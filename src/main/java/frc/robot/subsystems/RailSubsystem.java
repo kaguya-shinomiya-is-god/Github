@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,17 +26,29 @@ public class RailSubsystem extends SubsystemBase {
 
    private void initMotor(){
     rail = new VictorSPX(Constants.MOTOR_RAIL);
+    this.rail.configNeutralDeadband(0.04);
+    this.rail.setNeutralMode(NeutralMode.Brake);;
+    
   }
 
-    public void manageRailR(double tR){
-        if(Driver.minMethod(tR) != 0){ 
-            rail.set(ControlMode.PercentOutput, -tR);
+    public void manageRailR(double tR,double tL){
+        if((Driver.minMethod(tR) != 0) && (Driver.minMethod(tL) != 0)){
+          rail.set(ControlMode.PercentOutput,0);
+        }
+        else if(Driver.minMethod(tR) != 0){ 
+            rail.set(ControlMode.PercentOutput, tR);
+            SmartDashboard.putBoolean("Trilho frente", true);
+        }
+        else if(Driver.minMethod(tL) != 0){
+          rail.set(ControlMode.PercentOutput, -tL);
             SmartDashboard.putBoolean("Trilho", true);
         }
         else{
-            rail.set(ControlMode.PercentOutput, 0);
-            SmartDashboard.putBoolean("Trilho", false);
+          rail.set(ControlMode.PercentOutput, 0);
+          SmartDashboard.putBoolean("Trilho", false);
         }
+        SmartDashboard.putNumber("Forca RT", tR);
+        SmartDashboard.putNumber("Forca LT", tL);
     }  
 
     public void manageRailL(double tL){
@@ -44,7 +57,7 @@ public class RailSubsystem extends SubsystemBase {
             SmartDashboard.putBoolean("Trilho", true);
         }
         else{
-            rail.set(ControlMode.PercentOutput, 0);
+          rail.set(ControlMode.PercentOutput, 0);
             SmartDashboard.putBoolean("Trilho", false);
         }
       }

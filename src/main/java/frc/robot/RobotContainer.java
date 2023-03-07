@@ -13,13 +13,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.DefaultRail;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.RailSubsystem;
 import frc.robot.utils.Driver;
-import frc.robot.utils.SystemDriver;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,6 +45,7 @@ public class RobotContainer {
     configureButtonBindings();
     lb.whileTrue(new RunCommand(() -> robotDrive.setPower(Driver.povCalc(driverController.getPOV()))));
     robotDrive.setDefaultCommand(new DefaultDrive(robotDrive, driverController));
+    rail.setDefaultCommand(new DefaultRail(rail, systemsController));
     
   }
 
@@ -62,7 +63,7 @@ public class RobotContainer {
     //     robotDrive.setPower(powers);
     //   }, robotDrive), false);
 
-    new JoystickButton(systemsController, 1)
+    new JoystickButton(systemsController, Constants.BUTTON_X)
       .toggleOnTrue(Commands.run(() -> {
         SmartDashboard.putBoolean("Claw Activated", true);
         claw.clawActivate();
@@ -71,21 +72,8 @@ public class RobotContainer {
         SmartDashboard.putBoolean("Claw Activated", false);
         claw.clawDesactivate();
       }));
-    
-    new JoystickButton(systemsController, Constants.SYSTEM_CONTROLLER_SIDE_BUTTON)
-      .toggleOnTrue(Commands.run(() -> 
-        rail.manageRailL(systemsController.getRawAxis(Constants.LT))))
-      .toggleOnFalse(Commands.run(() ->
-        rail.morreEssaDisgrama()));
-      
 
-    new JoystickButton(systemsController, 2)
-      .toggleOnTrue(Commands.run(() -> 
-        rail.manageRailR(systemsController.getY())))
-      .toggleOnFalse(Commands.run(() ->
-        rail.morreEssaDisgrama()));
-
-    new JoystickButton(systemsController, 3)
+    new JoystickButton(systemsController, Constants.RB)
       .whileTrue(Commands.run(() ->{
         arm.armUp(); 
         arm.up = true;
@@ -95,10 +83,10 @@ public class RobotContainer {
         arm.up = false;
         SmartDashboard.putString("Elevacao Pneumatico", "Nao");
       }));
-    new JoystickButton(systemsController, 4)
+    new JoystickButton(systemsController, Constants.LB)
       .whileTrue(Commands.run(() -> {
         arm.armDown();
-        arm.down = false;
+        arm.down = true;
         SmartDashboard.putString("Descida Pneumatico", "Sim");
         }
       ))
@@ -107,16 +95,9 @@ public class RobotContainer {
         SmartDashboard.putString("Descida Pneumatico", "Nao");
       }));
 
-    new JoystickButton(systemsController, 11)
-      .onTrue(Commands.runOnce(() -> arm.motorOn(spd)))
+    new JoystickButton(systemsController, Constants.BUTTON_B)
+      .onTrue(Commands.runOnce(() -> arm.motorOn(0.75)))
       .onFalse(Commands.runOnce(() -> arm.motorOff()));
-
-     new JoystickButton(systemsController, Constants.BUTTON_A)
-       .onTrue(Commands.runOnce(() -> {
-        spd = SystemDriver.auxiliarMotorSpdAdjust(spd);
-        SmartDashboard.putNumber("Auxiliar Motor Speed", spd);
-       }
-       ));
     
     
     // new JoystickButton(systemsController, Constants.BUTTON_B)

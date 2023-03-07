@@ -47,7 +47,10 @@ public class ArmSubsystem extends SubsystemBase {
   public void armUp(){
     SmartDashboard.putString("Arm Direction", "Up");
     pneuUP();
-    motorOn(Constants.kNormalSpd);
+    if(spEncoder.getPosition() > 0.08 && spEncoder.getPosition() < 0.11)
+      motorOn(0.75);
+    else
+      motorOff(); 
   }
 
   public void armDown(){

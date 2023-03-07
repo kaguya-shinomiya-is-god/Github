@@ -51,7 +51,7 @@ public final class Constants {
     public static final double kFastSpd = 1;
     public static final double kNormalSpd = 0.5;
     public static final double kSlowSpd = 0.25;
-    public static final double kPistonLowPosition = 2.4;
+    public static final double kPistonLowPosition = 30;
 }
 
 
